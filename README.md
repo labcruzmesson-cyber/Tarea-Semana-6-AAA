@@ -37,7 +37,7 @@ Este laboratorio implementa una solución integral de Control de Acceso, Autenti
 ## 3. Topología de Red y Plan de Direccionamiento
 
 La infraestructura se compone de un segmento de red de gestión local en Capa 2 y Capa 3 bajo el direccionamiento `10.25.68.0/27`.
-![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-4-Infraestructura-2/blob/main/IMAGES/topologia.png)
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Topologia.png)
 
 ### Matriz de Conectividad e Interfaces
 
@@ -66,9 +66,7 @@ El modelo de privilegios de Cisco IOS restringe el conjunto de comandos permitid
 
 ### 5.1. Estructura de Active Directory
 Se crearon tres grupos de seguridad globales para alojar las cuentas operativas:
-* `Cisco-Priv-0` $\rightarrow$ Usuario miembro: `user-nivel0`
-* `Cisco-Priv-5` $\rightarrow$ Usuario miembro: `user-nivel5`
-* `Cisco-Priv-10` $\rightarrow$ Usuario miembro: `user-nivel10`
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/grupos%20y%20usuarios.png)
 
 ### 5.2. Configuración del Servicio NPS (RADIUS)
 * **Clientes RADIUS:** Se registraron tanto el Router (`10.25.68.1`) como el Switch (`10.25.68.2`) con la clave compartida (*Shared Secret*) configurada.
@@ -77,6 +75,11 @@ Se crearon tres grupos de seguridad globales para alojar las cuentas operativas:
   * **Nombre de Atributo:** `Cisco-AVPair`
   * **Valor:** `shell:priv-lvl=X` *(adaptado según la directiva para 0, 5 y 10)*
 
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/clientes.png)
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/politicas.png)
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/atributos%20radius.png)
+
+
 ---
 
 ## 7. Pruebas y Evidencias de Validación
@@ -84,106 +87,32 @@ Se crearon tres grupos de seguridad globales para alojar las cuentas operativas:
 ### 7.1. Verificación de Nivel 0 (Modo Restringido)
 * **Objetivo:** Verificar que el usuario inicia con prompt de usuario (`>`), obtiene nivel 0 y se le deniegan comandos operativos.
 * **Comandos probados:** `show privilege`, `ping 10.25.68.10`, `exit`.
-
-```text
-User Access Verification
-
-Username: user-nivel0
-Password: 
-R1
-IOSv is strictly limited to use for evaluation, demonstration and IOS
-education. IOSv is provided as-is and is not supported by Cisco's
-Technical Advisory Center. Any use or disclosure, in whole or in part,
-of the IOSv Software or Documentation to any third party for any
-purposes is expressly prohibited except as otherwise authorized by
-Cisco in writing.
-
-*Oct 29 18:26:31.813: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel0] [Source: UNKNOWN] [localport: 0] at 18:26:31 UTC Thu Oct 29 2026
-R1>show privilege
-Current privilege level is 0
-R1>ping 10.25.68.10
-   ^
-% Invalid input detected at '^' marker.
-R1>
-```
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%200.png)
 
 ---
 
-### 7.2. Verificación de Nivel 5 (Diagnóstico / Operativo)
+## 7.2. Verificación de Nivel 5 (Diagnóstico / Operativo)
 * **Objetivo:** Validar inicio directo en modo EXEC (`#`), autorización de utilidades de conectividad y restricción de configuraciones.
 * **Comandos probados:** `show privilege`, `ping 10.25.68.10`, `show running-config` (intento denegado), `show interfaces`.
 
-```text
-*Oct 29 18:27:16.413: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel5] [Source: UNKNOWN] [localport: 0] at 18:27:16 UTC Thu Oct 29 2026
-R1#show privilege
-Current privilege level is 5
-R1#ping 10.25.68.10
-Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.25.68.10, timeout is 2 seconds:
-!!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 2/3/5 ms
-R1#show running-config
-          ^
-% Invalid input detected at '^' marker.
-
-R1#show interfaces
-GigabitEthernet0/0 is up, line protocol is up 
-  Hardware is iGbE, address is 5076.db00.1800 (bia 5076.db00.1800)
-  Description: LAN-SERVIDORES
-  Internet address is 10.25.68.1/27
-  ...
-```
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%205%20RouterPrivi.png)
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%205%20RouterShow.png)
 
 Verificación complementaria en **SW1**:
 
-```text
-*Oct 29 18:34:54.206: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel5] [Source: UNKNOWN] [localport: 0] at 18:34:54 UTC Thu Oct 29 2026
-SW1#show mac ?
-% Unrecognized command
-SW1#show interfaces
-GigabitEthernet0/0 is up, line protocol is up (connected)
-  Hardware is iGbE, address is 5049.4600.1900 (bia 5049.4600.1900)
-  Description: ENLACE-ROUTER
-  ...
-```
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%205%20SwitchShow.png)
 
 ---
 
 ### 7.3. Verificación de Nivel 10 (Auditoría y Gestión)
 * **Objetivo:** Demostrar acceso a configuraciones activas y tablas de conmutación de Capa 2.
 * **Comandos probados:** `show privilege`, `show ip route`, `show mac address-table`.
-
-```text
-*Oct 29 18:36:35.323: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel10] [Source: UNKNOWN] [localport: 0] at 18:36:35 UTC Thu Oct 29 2026
-R1#show privilege
-Current privilege level is 10
-R1#show ip route
-Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
-       ...
-Gateway of last resort is not set
-
-      10.0.0.0/8 is variably subnetted, 2 subnets, 2 masks
-C        10.25.68.0/27 is directly connected, GigabitEthernet0/0
-L        10.25.68.1/32 is directly connected, GigabitEthernet0/0
-```
+  
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%2010%20router%20show.png)
 
 Verificación en **SW1**:
 
-```text
-*Oct 29 18:37:19.226: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel10] [Source: UNKNOWN] [localport: 0] at 18:37:19 UTC Thu Oct 29 2026
-SW1#show privilege
-Current privilege level is 10
-SW1#show mac address-table
-          Mac Address Table
--------------------------------------------
-
-Vlan    Mac Address       Type        Ports
-----    -----------       --------    -----
-   1    5070.6200.1300    DYNAMIC     Gi0/2
-   1    5076.db00.1800    DYNAMIC     Gi0/0
-   1    925d.c9e8.f98b    DYNAMIC     Gi0/2
-Total Mac Addresses for this criterion: 3
-```
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Verificaci%C3%B3n%20de%20Nivel%2010%20switch%20show.png)
 
 ---
 
@@ -191,17 +120,7 @@ Total Mac Addresses for this criterion: 3
 * **Objetivo:** Validar que el usuario local `admin` inicia sesión directamente en nivel 15 sin degradación ante fallos del canal RADIUS.
 * **Comando probado:** `show privilege`.
 
-```text
-User Access Verification
-
-Username: admin
-Password: 
-...
-R1#
-*Oct 29 18:38:54.346: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: UNKNOWN] [localport: 0] at 18:38:54 UTC Thu Oct 29 2026
-R1#show privilege
-Current privilege level is 15
-```
+![Topología de Red](https://raw.githubusercontent.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/refs/heads/main/IMAGES/Usuario%20local.png)
 
 ---
 
@@ -209,18 +128,11 @@ Current privilege level is 15
 * **Objetivo:** Confirmar que las líneas virtuales VTY utilizan transporte SSH v2 con autenticación local independiente.
 * **Comando probado:** Conexión desde PowerShell con `ssh admin@10.25.68.2`.
 
-```powershell
-PS C:\Users\Administrator> ssh admin@10.25.68.2
-Password: 
-SW1#
-```
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/blob/main/IMAGES/acceso%20remoto.png)
+
 
 Registro del evento en el switch:
-
-```text
-*Oct 29 18:38:42.506: %SYS-6-LOGOUT: User user-nivel10 has exited tty session 0
-*Oct 29 18:40:19.254: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: 10.25.68.10] [localport: 22] at 18:40:19 UTC Thu Oct 29 2026
-```
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/blob/main/IMAGES/accesoremoto%20switch.png)
 
 ---
 
@@ -228,15 +140,7 @@ Registro del evento en el switch:
 * **Objetivo:** Constatar la generación de eventos de auditoría para accesos por consola física (puerto 0) y remotos (puerto 22).
 * **Comando probado:** `show logging | include %SEC_LOGIN`.
 
-```text
-SW1#show logging | include %SEC_LOGIN
-Oct 29 18:24:37.977: %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: ] [Source: UNKNOWN] [localport: 0] [Reason: Login Authentication Failed] at 18:24:37 UTC Thu Oct 29 2026
-Oct 29 18:25:57.261: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: UNKNOWN] [localport: 0] at 18:25:57 UTC Thu Oct 29 2026
-Oct 29 18:34:54.206: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel5] [Source: UNKNOWN] [localport: 0] at 18:34:54 UTC Thu Oct 29 2026
-Oct 29 18:37:19.226: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: user-nivel10] [Source: UNKNOWN] [localport: 0] at 18:37:19 UTC Thu Oct 29 2026
-Oct 29 18:40:19.254: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: 10.25.68.10] [localport: 22] at 18:40:19 UTC Thu Oct 29 2026
-Oct 29 18:41:04.453: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: admin] [Source: UNKNOWN] [localport: 0] at 18:41:04 UTC Thu Oct 29 2026
-```
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-6-AAA/blob/main/IMAGES/Auditor%C3%ADa%20de%20Eventos%20y%20Trazabilidad.png)
 
 ---
 
