@@ -1,0 +1,207 @@
+Current configuration : 5198 bytes
+!
+! Last configuration change at 18:36:25 UTC Thu Oct 29 2026 by admin
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging buffered 64000
+enable secret level 5 5 $1$cXis$c0onrwugRedK2ZFFAIaZv/
+enable secret level 10 5 $1$KJne$rfQ0QgWXTqpCXyn1IqXK5.
+enable secret 5 $1$2a92$hgY0RhPQPaNxcIukoIwSh1
+!
+aaa new-model
+!
+!
+aaa group server radius RADIUS_GROUP
+ server name WIN-NPS
+!
+aaa authentication login default group RADIUS_GROUP local
+aaa authentication login CON_AUX_LIST group RADIUS_GROUP local
+aaa authentication login SSH_LOCAL local
+aaa authorization console
+aaa authorization exec default group RADIUS_GROUP local if-authenticated
+aaa authorization exec CON_AUX_LIST group RADIUS_GROUP local if-authenticated
+aaa authorization exec SSH_LOCAL local
+aaa accounting exec default start-stop group RADIUS_GROUP
+!
+!
+!
+!
+!
+aaa session-id common
+ethernet lmi ce
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain name lab.local
+ip cef
+login delay 2
+login on-failure log
+login on-success log
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$8t.c$MztmHMAB9/rGgES.YhoLc/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description LAN-SERVIDORES
+ ip address 10.25.68.1 255.255.255.224
+ duplex full
+ speed 1000
+ media-type rj45
+!
+interface GigabitEthernet0/1
+ description ENLACE-SWITCH
+ ip address 10.25.68.60 255.255.255.224
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/3
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip ssh version 2
+!
+ip radius source-interface GigabitEthernet0/0
+!
+!
+!
+!
+radius server WIN-NPS
+ address ipv4 10.25.68.10 auth-port 1812 acct-port 1813
+ key RadiusPass2025!
+!
+!
+control-plane
+!
+privilege exec level 5 traceroute
+privilege exec level 5 ping
+privilege exec level 0 enable
+privilege exec level 10 reload
+privilege exec level 10 show vlans
+privilege exec level 10 show vlan-range
+privilege exec level 10 show ip route
+privilege exec level 10 show ip protocols
+privilege exec level 5 show ip interface brief
+privilege exec level 5 show ip interface
+privilege exec level 10 show ip arp
+privilege exec level 10 show ip
+privilege exec level 10 show version
+privilege exec level 10 show startup-config
+privilege exec level 10 show running-config
+privilege exec level 0 show privilege
+privilege exec level 5 show interfaces
+privilege exec level 10 show
+privilege exec level 0 logout
+privilege exec level 0 quit
+privilege exec level 0 exit
+privilege exec level 10 clear counters
+privilege exec level 10 clear
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+ authorization exec CON_AUX_LIST
+ login authentication CON_AUX_LIST
+ transport output none
+line aux 0
+ authorization exec CON_AUX_LIST
+ login authentication CON_AUX_LIST
+ transport output none
+line vty 0 4
+ authorization exec SSH_LOCAL
+ login authentication SSH_LOCAL
+ transport input ssh
+line vty 5 15
+ authorization exec SSH_LOCAL
+ login authentication SSH_LOCAL
+ transport input ssh
+!
+no scheduler allocate
+!
+end
