@@ -1,8 +1,9 @@
 # Implementación de Infraestructura AAA Segura (Cisco IOS & Windows Server NPS)
+[![Demostración en Video](https://img.shields.io/badge/Video-Demostración%20en%20YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/mO1XfCYHmUE)
 
 **Autor:** Manuel Alejandro Cruz Messón  
 **Matrícula:** 2025-0689  
-**Enlace del Video:** *(Pendiente de enlace)*
+**Enlace del Video:** *(https://youtu.be/mO1XfCYHmUE)*
 
 ---
 
@@ -36,27 +37,7 @@ Este laboratorio implementa una solución integral de Control de Acceso, Autenti
 ## 3. Topología de Red y Plan de Direccionamiento
 
 La infraestructura se compone de un segmento de red de gestión local en Capa 2 y Capa 3 bajo el direccionamiento `10.25.68.0/27`.
-
-```text
-       +-----------------------+
-       |       R1 (vIOS)       |
-       |     Gi0/0: .1/27      |
-       +-----------+-----------+
-                   |
-                   | Gi0/0
-                   |
-       +-----------+-----------+
-       |      SW1 (Switch)     |
-       |      VLAN 1: .2/27    |
-       +-----------+-----------+
-                   | Gi0/2
-                   |
-                   | e0
-       +-----------+-----------+
-       |   Winserver (AD/NPS)  |
-       |      Eth0: .10/27     |
-       +-----------------------+
-```
+![Topología de Red](https://github.com/labcruzmesson-cyber/Tarea-Semana-4-Infraestructura-2/blob/main/IMAGES/topologia.png)
 
 ### Matriz de Conectividad e Interfaces
 
